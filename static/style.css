@@ -1,0 +1,110 @@
+body{
+    margin:0;
+    padding:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#eef4f7;
+    color:#222;
+}
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:40px auto;
+}
+
+.header{
+    background:#23242b;
+    color:white;
+    padding:30px;
+    border-radius:15px;
+    margin-bottom:35px;
+}
+
+.header h1{
+    margin:0;
+    font-size:42px;
+}
+
+.header p{
+    margin-top:10px;
+    color:#d6d6d6;
+    font-size:18px;
+}
+
+h2{
+    color:#2d2d38;
+    margin-bottom:20px;
+}
+
+.market-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+    margin-bottom:40px;
+}
+
+.weather-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-bottom:40px;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    padding:22px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+    transition:0.25s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.label{
+    font-size:15px;
+    color:#777;
+    margin-bottom:10px;
+}
+
+.value{
+    font-size:34px;
+    font-weight:bold;
+    color:#1c355e;
+}
+
+.value-small{
+    font-size:24px;
+    font-weight:bold;
+    color:#1c355e;
+}
+
+.chart-card{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+    margin-bottom:40px;
+}
+
+#chart{
+    width:100%;
+    height:450px;
+}
+
+@media(max-width:768px){
+
+    .header h1{
+        font-size:32px;
+    }
+
+    .value{
+        font-size:28px;
+    }
+
+    .value-small{
+        font-size:22px;
+    }
+
+}

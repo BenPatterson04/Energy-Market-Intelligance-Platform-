@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Energy Market Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <header class="header">
+        <h1>⚡ Energy Market Dashboard</h1>
+        <p>Live Energy & Weather Monitoring</p>
+    </header>
+
+    <section>
+        <h2>Markets</h2>
+
+        <div class="market-grid">
+
+            <div class="card">
+                <div class="label">🛢 Brent Crude</div>
+                <div class="value">${{ brent }}</div>
+            </div>
+
+            <div class="card">
+                <div class="label">🔥 NBP Gas</div>
+                <div class="value">{{ gas }} p/therm</div>
+            </div>
+
+            <div class="card">
+                <div class="label">⚡ Electricity</div>
+                <div class="value">£{{ electricity }}/MWh</div>
+            </div>
+
+        </div>
+    </section>
+
+    <section>
+
+        <h2>Weather</h2>
+
+        <div class="weather-grid">
+
+            <div class="card">
+                <div class="label">📍 Location</div>
+                <div class="value-small">{{ city }}</div>
+            </div>
+
+            <div class="card">
+                <div class="label">🌡 Temperature</div>
+                <div class="value-small">{{ temperature }} °C</div>
+            </div>
+
+            <div class="card">
+                <div class="label">💨 Wind Speed</div>
+                <div class="value-small">{{ wind_speed }} km/h</div>
+            </div>
+
+            <div class="card">
+                <div class="label">☁ Conditions</div>
+                <div class="value-small">{{ condition }}</div>
+            </div>
+
+            <div class="card">
+                <div class="label">🕒 Last Updated</div>
+                <div class="value-small">{{ updated }}</div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section>
+
+        <h2>Brent Crude Price Trend</h2>
+
+        <div class="chart-card">
+            <div id="chart"></div>
+        </div>
+
+    </section>
+
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<script>
+
+    var graph = {{ graphJSON | safe }};
+
+    Plotly.newPlot(
+        "chart",
+        graph.data,
+        graph.layout,
+        {
+            responsive: true,
+            displayModeBar: false
+        }
+    );
+
+</script>
+
+</body>
+
+</html>
