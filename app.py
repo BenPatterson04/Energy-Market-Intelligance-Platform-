@@ -1,26 +1,22 @@
 from flask import Flask, render_template
 import requests
+import yfinance as yf
 from datetime import datetime
 
 app = Flask(__name__)
 
 # -----------------------------
-# API KEYS
+# API KEY
 # -----------------------------
-
 API_KEY = "33e78ee7ef8c1cc110237f9095609230"
 
-# -----------------------------
-# ROUTE
-# -----------------------------
 
 @app.route("/")
 def home():
 
     # -----------------------------
-    # Live Weather
+    # WEATHER
     # -----------------------------
-
     city = "Belfast"
 
     weather_url = (
@@ -28,40 +24,50 @@ def home():
         f"?q={city}&appid={API_KEY}&units=metric"
     )
 
-    weather = requests.get(weather_url).json()
+    try:
+        weather = requests.get(weather_url, timeout=10).json()
 
-    location = weather["name"]
-    temperature = round(weather["main"]["temp"], 1)
-    wind_speed = round(weather["wind"]["speed"] * 3.6, 1)  # m/s → km/h
-    condition = weather["weather"][0]["description"].title()
+        location = weather["name"]
+        temperature = round(weather["main"]["temp"], 1)
+        wind_speed = round(weather["wind"]["speed"] * 3.6, 1)
+        condition = weather["weather"][0]["description"].title()
+
+    except Exception:
+        location = "Unavailable"
+        temperature = "--"
+        wind_speed = "--"
+        condition = "--"
 
     # -----------------------------
-    # Wholesale Market Prices
+    # LIVE MARKETS
     # -----------------------------
+    try:
+        brent = round(
+            yf.Ticker("BZ=F").history(period="1d")["Close"].iloc[-1], 2
+        )
+    except Exception:
+        brent = "--"
 
-    # (Replace these with live APIs later)
+    try:
+        gas = round(
+            yf.Ticker("NG=F").history(period="1d")["Close"].iloc[-1], 2
+        )
+    except Exception:
+        gas = "--"
 
-    brent = 71.42
-    gas = 84.60
     electricity = 96.35
 
     # -----------------------------
-    # Domestic Energy Prices
+    # RETAIL PRICES
     # -----------------------------
-
     electricity_tariff = "27.5p/kWh"
     gas_tariff = "6.8p/kWh"
     heating_oil = "54.3p/L"
     standing_charge = "61p/day"
 
-    # -----------------------------
-    # Time Updated
-    # -----------------------------
-
     updated = datetime.now().strftime("%d %B %Y %H:%M")
 
     return render_template(
-
         "index.html",
 
         brent=brent,
@@ -78,8 +84,7 @@ def home():
         wind_speed=wind_speed,
         condition=condition,
 
-        updated=updated
-
+        updated=updated,
     )
 
 

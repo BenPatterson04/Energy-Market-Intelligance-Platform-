@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,115 +12,80 @@
 
 <div class="container">
 
-    <div class="header">
+    <header class="header">
         <h1>⚡ Energy Market Intelligence Platform</h1>
-        <p>Live wholesale markets, domestic energy prices and weather intelligence.</p>
-    </div>
+        <p>Live Energy Dashboard</p>
+        <span>Updated {{ updated }}</span>
+    </header>
 
-    <!-- Wholesale Markets -->
-
-    <div class="section">
-
-        <h2>📊 Wholesale Markets</h2>
-
-        <div class="market-grid">
-
-            <div class="card">
-                <div class="label">Brent Crude</div>
-                <div class="value">${{ brent }}</div>
-            </div>
-
-            <div class="card">
-                <div class="label">NBP Gas</div>
-                <div class="value">{{ gas }} p/therm</div>
-            </div>
-
-            <div class="card">
-                <div class="label">Electricity Price</div>
-                <div class="value">£{{ electricity }}/MWh</div>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Domestic Energy -->
-
-    <div class="section">
-
-        <h2>🏠 Domestic Energy Prices</h2>
-
-        <div class="market-grid">
-
-            <div class="card">
-                <div class="label">Electricity Tariff</div>
-                <div class="value">{{ electricity_tariff }}</div>
-            </div>
-
-            <div class="card">
-                <div class="label">Gas Tariff</div>
-                <div class="value">{{ gas_tariff }}</div>
-            </div>
-
-            <div class="card">
-                <div class="label">Heating Oil</div>
-                <div class="value">{{ heating_oil }}</div>
-            </div>
-
-            <div class="card">
-                <div class="label">Standing Charge</div>
-                <div class="value">{{ standing_charge }}</div>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Weather -->
-
-    <div class="section">
-
-        <h2>🌦 Weather</h2>
-
-        <div class="market-grid">
-
-            <div class="card">
-                <div class="label">Location</div>
-                <div class="value">{{ location }}</div>
-            </div>
-
-            <div class="card">
-                <div class="label">Temperature</div>
-                <div class="value">{{ temperature }} °C</div>
-            </div>
-
-            <div class="card">
-                <div class="label">Wind Speed</div>
-                <div class="value">{{ wind_speed }} km/h</div>
-            </div>
-
-            <div class="card">
-                <div class="label">Conditions</div>
-                <div class="value">{{ condition }}</div>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Last Updated -->
-
-    <div class="section">
+    <div class="grid">
 
         <div class="card">
+            <h2>🛢 Brent Oil</h2>
+            <div class="price">$ {{ brent }}</div>
+        </div>
 
-            <div class="label">
-                Last Updated
-            </div>
+        <div class="card">
+            <h2>🔥 Natural Gas</h2>
+            <div class="price">$ {{ gas }}</div>
+        </div>
 
-            <div class="value">
-                {{ updated }}
-            </div>
+        <div class="card">
+            <h2>⚡ Electricity</h2>
+            <div class="price">{{ electricity }}</div>
+            <small>Wholesale Index</small>
+        </div>
+
+        <div class="card">
+            <h2>🌤 Weather</h2>
+
+            <p><strong>{{ location }}</strong></p>
+
+            <p>{{ condition }}</p>
+
+            <p>{{ temperature }} °C</p>
+
+            <p>Wind {{ wind_speed }} km/h</p>
+
+        </div>
+
+        <div class="card">
+            <h2>🏠 Domestic Prices</h2>
+
+            <table>
+
+                <tr>
+                    <td>Electricity</td>
+                    <td>{{ electricity_tariff }}</td>
+                </tr>
+
+                <tr>
+                    <td>Gas</td>
+                    <td>{{ gas_tariff }}</td>
+                </tr>
+
+                <tr>
+                    <td>Heating Oil</td>
+                    <td>{{ heating_oil }}</td>
+                </tr>
+
+                <tr>
+                    <td>Standing Charge</td>
+                    <td>{{ standing_charge }}</td>
+                </tr>
+
+            </table>
+
+        </div>
+
+        <div class="card">
+            <h2>📈 Market Status</h2>
+
+            <p>✔ Live Weather API</p>
+            <p>✔ Live Brent Futures</p>
+            <p>✔ Live Natural Gas Futures</p>
+            <p>✔ Flask Backend</p>
+            <p>✔ Render Deployment</p>
 
         </div>
 
@@ -130,5 +94,4 @@
 </div>
 
 </body>
-
 </html>

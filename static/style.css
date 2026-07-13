@@ -1,224 +1,112 @@
-/* ===========================================
-   ENERGY MARKET INTELLIGENCE PLATFORM
-   =========================================== */
-
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
 }
 
 body{
-
-    font-family:Arial, Helvetica, sans-serif;
-
-    background:#edf3f8;
-
-    color:#222;
-
+    background:#0d1117;
+    color:white;
+    padding:40px;
 }
 
 .container{
-
-    width:90%;
     max-width:1400px;
-
     margin:auto;
-
 }
 
-/* ===========================================
-   HEADER
-   =========================================== */
-
 .header{
-
-    margin-top:40px;
-
-    background:linear-gradient(135deg,#23242b,#39404d);
-
-    color:white;
-
-    padding:40px;
-
-    border-radius:20px;
-
-    box-shadow:0 10px 30px rgba(0,0,0,.25);
-
+    background:#161b22;
+    border-radius:18px;
+    padding:35px;
+    margin-bottom:35px;
+    border:1px solid #30363d;
 }
 
 .header h1{
-
-    font-size:44px;
-
+    font-size:42px;
     margin-bottom:10px;
-
 }
 
 .header p{
-
-    color:#d8d8d8;
-
+    color:#8b949e;
     font-size:18px;
-
 }
 
-/* ===========================================
-   SECTION
-   =========================================== */
-
-.section{
-
-    margin-top:45px;
-
+.header span{
+    display:block;
+    margin-top:15px;
+    color:#58a6ff;
 }
 
-.section h2{
-
-    font-size:30px;
-
-    margin-bottom:20px;
-
-    color:#243447;
-
-}
-
-/* ===========================================
-   GRID
-   =========================================== */
-
-.market-grid{
-
+.grid{
     display:grid;
-
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
     gap:25px;
-
 }
-
-/* ===========================================
-   CARDS
-   =========================================== */
 
 .card{
-
-    background:white;
-
+    background:#161b22;
     border-radius:18px;
-
-    padding:25px;
-
-    box-shadow:0 12px 25px rgba(0,0,0,.08);
-
-    transition:0.35s;
-
-    border-left:6px solid #2f80ed;
-
+    padding:28px;
+    border:1px solid #30363d;
+    transition:0.25s;
 }
 
 .card:hover{
-
-    transform:translateY(-8px);
-
-    box-shadow:0 20px 40px rgba(0,0,0,.18);
-
+    transform:translateY(-6px);
+    border-color:#58a6ff;
 }
 
-/* ===========================================
-   LABEL
-   =========================================== */
+.card h2{
+    margin-bottom:18px;
+    color:#58a6ff;
+}
 
-.label{
-
-    color:#7b8794;
-
-    font-size:15px;
-
+.price{
+    font-size:42px;
     font-weight:bold;
-
-    text-transform:uppercase;
-
-    letter-spacing:1px;
-
+    color:#3fb950;
+    margin-bottom:10px;
 }
 
-/* ===========================================
-   VALUE
-   =========================================== */
+.card p{
+    margin:8px 0;
+    color:#c9d1d9;
+}
 
-.value{
+table{
+    width:100%;
+    border-collapse:collapse;
+}
 
-    margin-top:12px;
+td{
+    padding:12px 0;
+    border-bottom:1px solid #30363d;
+}
 
-    font-size:34px;
-
+td:last-child{
+    text-align:right;
     font-weight:bold;
-
-    color:#243447;
-
 }
 
-/* ===========================================
-   COLOUR STRIPS
-   =========================================== */
-
-.section:nth-of-type(2) .card{
-
-    border-left:6px solid #27ae60;
-
+small{
+    color:#8b949e;
 }
 
-.section:nth-of-type(3) .card{
+@media(max-width:700px){
 
-    border-left:6px solid #f39c12;
+    body{
+        padding:20px;
+    }
 
-}
+    .header h1{
+        font-size:30px;
+    }
 
-.section:nth-of-type(4) .card{
-
-    border-left:6px solid #3498db;
-
-}
-
-/* ===========================================
-   LAST UPDATED
-   =========================================== */
-
-.section:last-child .card{
-
-    text-align:center;
-
-}
-
-/* ===========================================
-   RESPONSIVE
-   =========================================== */
-
-@media(max-width:900px){
-
-.header{
-
-padding:25px;
-
-}
-
-.header h1{
-
-font-size:34px;
-
-}
-
-.value{
-
-font-size:28px;
-
-}
-
-.section h2{
-
-font-size:24px;
-
-}
+    .price{
+        font-size:32px;
+    }
 
 }
