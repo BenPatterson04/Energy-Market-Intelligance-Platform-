@@ -1,3 +1,7 @@
+/* ==============================
+   ENERGY MARKET PLATFORM V2
+============================== */
+
 *{
     margin:0;
     padding:0;
@@ -6,107 +10,162 @@
 }
 
 body{
-    background:#0d1117;
-    color:white;
+    background:#0f172a;
+    color:#f8fafc;
     padding:40px;
 }
 
 .container{
-    max-width:1400px;
+    max-width:1200px;
     margin:auto;
 }
 
+/* ==============================
+HEADER
+============================== */
+
 .header{
-    background:#161b22;
-    border-radius:18px;
-    padding:35px;
+    background:linear-gradient(135deg,#1e293b,#111827);
+    padding:40px;
+    border-radius:20px;
     margin-bottom:35px;
-    border:1px solid #30363d;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 10px 35px rgba(0,0,0,.35);
 }
 
 .header h1{
     font-size:42px;
-    margin-bottom:10px;
+    margin-bottom:12px;
 }
 
 .header p{
-    color:#8b949e;
+    color:#94a3b8;
     font-size:18px;
 }
 
-.header span{
-    display:block;
+.updated{
+    color:#38bdf8;
     margin-top:15px;
-    color:#58a6ff;
+    font-size:15px;
 }
+
+/* ==============================
+SECTION TITLES
+============================== */
+
+.section-title{
+    font-size:28px;
+    margin:35px 0 20px;
+    color:white;
+}
+
+/* ==============================
+GRID
+============================== */
 
 .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:25px;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
 }
 
+/* ==============================
+CARDS
+============================== */
+
 .card{
-    background:#161b22;
+    background:#1e293b;
     border-radius:18px;
-    padding:28px;
-    border:1px solid #30363d;
-    transition:0.25s;
+    padding:24px;
+    border:1px solid rgba(255,255,255,.08);
+    transition:.25s;
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
 }
 
 .card:hover{
-    transform:translateY(-6px);
-    border-color:#58a6ff;
+    transform:translateY(-5px);
+    border-color:#38bdf8;
 }
 
-.card h2{
-    margin-bottom:18px;
-    color:#58a6ff;
+.card h3{
+    color:#94a3b8;
+    font-size:16px;
+    margin-bottom:15px;
+    text-transform:uppercase;
+    letter-spacing:1px;
 }
 
 .price{
-    font-size:42px;
+    font-size:40px;
     font-weight:bold;
-    color:#3fb950;
-    margin-bottom:10px;
+    color:#22c55e;
 }
 
-.card p{
-    margin:8px 0;
-    color:#c9d1d9;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-td{
-    padding:12px 0;
-    border-bottom:1px solid #30363d;
-}
-
-td:last-child{
-    text-align:right;
+.value{
+    font-size:34px;
     font-weight:bold;
+    color:white;
 }
 
-small{
-    color:#8b949e;
+.small{
+    color:#cbd5e1;
+    margin-top:8px;
+    font-size:15px;
 }
 
-@media(max-width:700px){
+/* ==============================
+WEATHER
+============================== */
+
+.weather{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.weather h2{
+    font-size:34px;
+}
+
+.weather p{
+    color:#cbd5e1;
+}
+
+/* ==============================
+FOOTER
+============================== */
+
+footer{
+    text-align:center;
+    margin-top:40px;
+    color:#64748b;
+    font-size:14px;
+}
+
+/* ==============================
+MOBILE
+============================== */
+
+@media(max-width:768px){
 
     body{
         padding:20px;
     }
 
+    .header{
+        padding:25px;
+    }
+
     .header h1{
-        font-size:30px;
+        font-size:32px;
     }
 
     .price{
         font-size:32px;
+    }
+
+    .value{
+        font-size:28px;
     }
 
 }
