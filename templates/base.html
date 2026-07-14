@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+        GridWise
+        {% endblock %}
+    </title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Main CSS -->
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ========================= -->
+    <!-- Sidebar -->
+    <!-- ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <i class="fa-solid fa-bolt"></i>
+
+            <div>
+
+                <h2>GridWise</h2>
+
+                <span>Energy Intelligence</span>
+
+            </div>
+
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="/" class="active">
+
+                <i class="fa-solid fa-house"></i>
+
+                Dashboard
+
+            </a>
+
+            <a href="#">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                Markets
+
+            </a>
+
+            <a href="#">
+
+                <i class="fa-solid fa-bolt"></i>
+
+                Grid
+
+            </a>
+
+            <a href="#">
+
+                <i class="fa-solid fa-house-chimney"></i>
+
+                Domestic
+
+            </a>
+                        <a href="#">
+
+                <i class="fa-solid fa-newspaper"></i>
+
+                Intelligence
+
+            </a>
+
+            <a href="#">
+
+                <i class="fa-solid fa-chart-area"></i>
+
+                Forecasts
+
+            </a>
+
+            <a href="#">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                About
+
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- ========================= -->
+    <!-- Main Content -->
+    <!-- ========================= -->
+
+    <main class="main-content">
+
+        <!-- Top Navigation -->
+
+        <header class="topbar">
+
+            <div class="page-title">
+
+                <h1>
+                    {% block page_title %}
+                    Dashboard
+                    {% endblock %}
+                </h1>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="text"
+                        placeholder="Search markets...">
+
+                </div>
+
+                <button class="icon-button">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                </button>
+
+                <button class="icon-button">
+
+                    <i class="fa-regular fa-user"></i>
+
+                </button>
+
+            </div>
+
+        </header>
+
+        <!-- Page Content -->
+
+        <section class="page-content">
+
+            {% block content %}
+            {% endblock %}
+
+        </section>
+
+    </main>
+
+</div>
+</body>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+</body>
+</html>

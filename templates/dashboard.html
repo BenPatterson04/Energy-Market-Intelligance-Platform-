@@ -1,0 +1,501 @@
+{% extends "base.html" %}
+
+{% block title %}
+GridWise | Dashboard
+{% endblock %}
+
+{% block page_title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <!-- ================================= -->
+    <!-- Hero -->
+    <!-- ================================= -->
+
+    <section class="hero-card">
+
+        <div class="hero-left">
+
+            <h2>Good Morning 👋</h2>
+
+            <p>
+                Welcome to <strong>GridWise</strong>, your energy market intelligence platform.
+            </p>
+
+            <p class="hero-description">
+
+                Monitor wholesale energy markets, UK grid conditions,
+                weather, domestic energy prices and live industry news
+                from one professional dashboard.
+
+            </p>
+
+            <div class="hero-status">
+
+                <span class="live-badge">
+                    🟢 LIVE
+                </span>
+
+                <span class="refresh-badge">
+                    Auto Refresh • 5 mins
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="hero-right">
+
+            <i class="fa-solid fa-bolt"></i>
+
+        </div>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- Market Snapshot -->
+    <!-- ================================= -->
+
+    <h2 class="section-title">
+
+        Market Snapshot
+
+    </h2>
+
+    <div class="market-grid">
+
+        <!-- Brent -->
+
+        <div class="market-card">
+
+            <span>🛢 Brent Crude</span>
+
+            <h3>${{ markets.brent.price }}</h3>
+
+            <p class="market-change {{ markets.brent.direction }}">
+
+                {% if markets.brent.direction == "up" %}
+                    ▲
+                {% elif markets.brent.direction == "down" %}
+                    ▼
+                {% endif %}
+
+                {{ markets.brent.change }}
+
+                ({{ markets.brent.change_percent }}%)
+
+            </p>
+
+        </div>
+
+        <!-- Natural Gas -->
+
+        <div class="market-card">
+
+            <span>🔥 Natural Gas</span>
+
+            <h3>{{ markets.natural_gas.price }}</h3>
+
+            <p class="market-change {{ markets.natural_gas.direction }}">
+
+                {% if markets.natural_gas.direction == "up" %}
+                    ▲
+                {% elif markets.natural_gas.direction == "down" %}
+                    ▼
+                {% endif %}
+
+                {{ markets.natural_gas.change }}
+
+                ({{ markets.natural_gas.change_percent }}%)
+
+            </p>
+
+        </div>
+
+        <!-- Electricity -->
+
+        <div class="market-card">
+
+            <span>⚡ Electricity</span>
+
+            <h3>{{ markets.electricity.price }}</h3>
+
+            <p class="market-change neutral">
+
+                {{ markets.electricity.change }}
+
+            </p>
+
+        </div>
+
+        <!-- FTSE -->
+
+        <div class="market-card">
+
+            <span>📈 FTSE 100</span>
+
+            <h3>{{ markets.ftse100.price }}</h3>
+
+            <p class="market-change {{ markets.ftse100.direction }}">
+
+                {% if markets.ftse100.direction == "up" %}
+                    ▲
+                {% elif markets.ftse100.direction == "down" %}
+                    ▼
+                {% endif %}
+
+                {{ markets.ftse100.change }}
+
+                ({{ markets.ftse100.change_percent }}%)
+
+            </p>
+
+        </div>
+
+        <!-- Gold -->
+
+        <div class="market-card">
+
+            <span>🥇 Gold</span>
+
+            <h3>${{ markets.gold.price }}</h3>
+
+            <p class="market-change {{ markets.gold.direction }}">
+
+                {% if markets.gold.direction == "up" %}
+                    ▲
+                {% elif markets.gold.direction == "down" %}
+                    ▼
+                {% endif %}
+
+                {{ markets.gold.change }}
+
+                ({{ markets.gold.change_percent }}%)
+
+            </p>
+
+        </div>
+
+        <!-- GBP/USD -->
+
+        <div class="market-card">
+
+            <span>💷 GBP/USD</span>
+
+            <h3>{{ markets.gbpusd.price }}</h3>
+
+            <p class="market-change {{ markets.gbpusd.direction }}">
+
+                {% if markets.gbpusd.direction == "up" %}
+                    ▲
+                {% elif markets.gbpusd.direction == "down" %}
+                    ▼
+                {% endif %}
+
+                {{ markets.gbpusd.change }}
+
+                ({{ markets.gbpusd.change_percent }}%)
+
+            </p>
+
+        </div>
+
+    </div>
+        <!-- ================================= -->
+    <!-- Weather & Grid -->
+    <!-- ================================= -->
+
+    <div class="two-column-grid">
+
+        <!-- Weather -->
+
+        <div class="info-card">
+
+            <h2>
+
+                <i class="fa-solid fa-cloud-sun"></i>
+
+                Weather
+
+            </h2>
+
+            <div class="info-content">
+
+                <div class="grid-row">
+
+                    <span>Location</span>
+
+                    <strong>{{ weather.location }}</strong>
+
+                </div>
+
+                <div class="grid-row">
+
+                    <span>Temperature</span>
+
+                    <strong>{{ weather.temperature }}°C</strong>
+
+                </div>
+
+                <div class="grid-row">
+
+                    <span>Feels Like</span>
+
+                    <strong>{{ weather.feels_like }}°C</strong>
+
+                </div>
+
+                <div class="grid-row">
+
+                    <span>Humidity</span>
+
+                    <strong>{{ weather.humidity }}%</strong>
+
+                </div>
+
+                <div class="grid-row">
+
+                    <span>Pressure</span>
+
+                    <strong>{{ weather.pressure }} hPa</strong>
+
+                </div>
+
+                <div class="grid-row">
+
+                    <span>Wind Speed</span>
+
+                    <strong>{{ weather.wind_speed }} km/h</strong>
+
+                </div>
+
+                <div class="grid-row">
+
+                    <span>Conditions</span>
+
+                    <strong>{{ weather.condition }}</strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Live Grid -->
+
+        <div class="info-card">
+
+            <h2>
+
+                <i class="fa-solid fa-bolt"></i>
+
+                Live Grid Status
+
+            </h2>
+
+            <div class="info-content">
+
+                <div class="grid-row">
+
+                    <span>Status</span>
+
+                    <strong class="status-live">
+
+                        {{ grid.status }}
+
+                    </strong>
+
+                </div>
+
+                <div class="grid-row">
+
+                    <span>Carbon Intensity</span>
+
+                    <strong>
+
+                        {{ grid.carbon }}
+
+                    </strong>
+
+                </div>
+
+                <div class="grid-row">
+
+                    <span>Carbon Index</span>
+
+                    <strong>
+
+                        {{ grid.index }}
+
+                    </strong>
+
+                </div>
+
+                <div class="grid-row">
+
+                    <span>{{ grid.fuel_1 }}</span>
+
+                    <strong>
+
+                        {{ grid.fuel_1_percent }}
+
+                    </strong>
+
+                </div>
+
+                <div class="grid-row">
+
+                    <span>{{ grid.fuel_2 }}</span>
+
+                    <strong>
+
+                        {{ grid.fuel_2_percent }}
+
+                    </strong>
+
+                </div>
+
+                <div class="grid-row">
+
+                    <span>{{ grid.fuel_3 }}</span>
+
+                    <strong>
+
+                        {{ grid.fuel_3_percent }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================================= -->
+    <!-- News -->
+    <!-- ================================= -->
+
+    <div class="two-column-grid">
+
+        <div class="news-card">
+
+            <h2>
+
+                🇬🇧 UK & Ireland Energy
+
+            </h2>
+
+            <ul class="news-list">
+
+                {% for article in news.uk %}
+
+                <li class="news-item">
+
+                    <div class="news-title">
+
+                        {{ article.title }}
+
+                    </div>
+
+                    <div class="news-source">
+
+                        {{ article.source }}
+
+                    </div>
+
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <div class="news-card">
+
+            <h2>
+
+                🌍 Global Energy
+
+            </h2>
+
+            <ul class="news-list">
+
+                {% for article in news.global %}
+
+                <li class="news-item">
+
+                    <div class="news-title">
+
+                        {{ article.title }}
+
+                    </div>
+
+                    <div class="news-source">
+
+                        {{ article.source }}
+
+                    </div>
+
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+    </div>
+        <!-- ================================= -->
+    <!-- Coming Soon -->
+    <!-- ================================= -->
+
+    <div class="feature-roadmap">
+
+        <div class="roadmap-card">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <h3>Interactive Charts</h3>
+
+            <p>
+                Professional Plotly charts with multiple timeframes.
+            </p>
+
+        </div>
+
+        <div class="roadmap-card">
+
+            <i class="fa-solid fa-robot"></i>
+
+            <h3>AI Market Briefing</h3>
+
+            <p>
+                Daily AI-generated commentary explaining market movements.
+            </p>
+
+        </div>
+
+        <div class="roadmap-card">
+
+            <i class="fa-solid fa-bell"></i>
+
+            <h3>Market Alerts</h3>
+
+            <p>
+                Personalised notifications for important market events.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
