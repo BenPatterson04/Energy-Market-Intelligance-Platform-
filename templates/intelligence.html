@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}
+GridWise | Intelligence
+{% endblock %}
+
+{% block page_title %}
+Intelligence
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <h2 class="section-title">Today's AI Briefing</h2>
+
+    <div class="chart-card">
+
+        <div class="commentary-tabs" id="intel-commentary-tabs">
+            <button class="region-tab" data-audience="business">Business</button>
+            <button class="region-tab" data-audience="student">Student</button>
+            <button class="region-tab active" data-audience="domestic">Domestic</button>
+        </div>
+
+        <div id="intel-commentary-box" class="commentary-box">
+            <p class="commentary-loading">Generating today's briefing…</p>
+        </div>
+
+        <p class="card-subtitle" style="margin-top:14px;">
+            This is the same briefing text used for GridWise's daily public posts -
+            copy it directly for Twitter/X, LinkedIn, or Substack.
+        </p>
+
+    </div>
+
+    <h2 class="section-title">UK &amp; Ireland Energy News</h2>
+
+    <div class="chart-card">
+        {% for article in news.uk[:6] %}
+        <div class="news-item">
+            <h4>{{ article.title }}</h4>
+            <span>{{ article.source }}</span>
+        </div>
+        {% else %}
+        <p class="commentary-loading">No headlines available right now.</p>
+        {% endfor %}
+    </div>
+
+    <h2 class="section-title">Global Energy News</h2>
+
+    <div class="chart-card">
+        {% for article in news.global[:6] %}
+        <div class="news-item">
+            <h4>{{ article.title }}</h4>
+            <span>{{ article.source }}</span>
+        </div>
+        {% else %}
+        <p class="commentary-loading">No headlines available right now.</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function loadIntelCommentary(audience) {
+        const box = document.getElementById("intel-commentary-box");
+        box.innerHTML = '<p class="commentary-loading">Generating today\'s briefing…</p>';
+
+        fetch(`/api/commentary?audience=${audience}`)
+            .then(r => r.json())
+            .then(data => { box.innerHTML = `<p>${data.commentary}</p>`; })
+            .catch(() => { box.innerHTML = '<p class="commentary-loading">Commentary unavailable right now.</p>'; });
+    }
+
+    document.querySelectorAll("#intel-commentary-tabs .region-tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll("#intel-commentary-tabs .region-tab").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            loadIntelCommentary(btn.dataset.audience);
+        });
+    });
+
+    loadIntelCommentary("domestic");
+</script>
+{% endblock %}

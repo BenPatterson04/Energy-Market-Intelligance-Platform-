@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}
+GridWise | Domestic
+{% endblock %}
+
+{% block page_title %}
+Domestic
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <h2 class="section-title">
+        Live Tariffs
+        <span class="data-source-badge {{ domestic.source }}">{{ domestic.source }}</span>
+    </h2>
+
+    <p class="card-subtitle" style="margin-bottom:16px;">
+        {{ domestic.source_note }}
+    </p>
+
+    <div class="market-grid">
+
+        <div class="market-card">
+            <span>⚡ Electricity Unit Rate</span>
+            <h3>{{ domestic.electricity_tariff }}</h3>
+        </div>
+
+        <div class="market-card">
+            <span>🔥 Gas Unit Rate</span>
+            <h3>{{ domestic.gas_tariff }}</h3>
+        </div>
+
+        <div class="market-card">
+            <span>📋 Combined Standing Charge</span>
+            <h3>{{ domestic.standing_charge }}</h3>
+        </div>
+
+        <div class="market-card">
+            <span>Tariff</span>
+            <h3 style="font-size:16px;">{{ domestic.product_name }}</h3>
+        </div>
+
+    </div>
+
+    <h2 class="section-title">Today's Cheapest Hours to Use Electricity</h2>
+
+    <div class="chart-card">
+        <div class="card-subtitle" style="margin-bottom:10px;">
+            Live half-hourly pricing from Octopus Agile - genuinely updates through the day,
+            tied to real wholesale prices. A good signal for when to run high-usage appliances.
+        </div>
+        <div id="chart-agile-rates" style="width:100%;height:280px;"></div>
+    </div>
+
+    <h2 class="section-title">Estimate Your Bill</h2>
+
+    <div class="chart-card">
+
+        <div class="alert-form" style="grid-template-columns:1fr 1fr 1fr;">
+            <div>
+                <label class="card-subtitle">Electricity use (kWh/day)</label><br>
+                <input type="number" id="elec-usage" value="10" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--card-light);color:var(--text);">
+            </div>
+            <div>
+                <label class="card-subtitle">Gas use (kWh/day)</label><br>
+                <input type="number" id="gas-usage" value="30" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--card-light);color:var(--text);">
+            </div>
+            <div style="display:flex;align-items:flex-end;">
+                <button onclick="calculateBill()" style="width:100%;padding:10px;border-radius:10px;border:none;background:var(--primary);color:#04120C;font-weight:700;cursor:pointer;">
+                    Calculate
+                </button>
+            </div>
+        </div>
+
+        <div id="bill-result" style="margin-top:20px;font-size:16px;"></div>
+
+        {% if domestic.source != 'live' %}
+        <p class="card-subtitle" style="margin-top:12px;">
+            Live rates are currently unavailable, so this estimate can't be calculated right now.
+        </p>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.2/plotly.min.js"></script>
+<script>
+    // Live rates parsed from the server-rendered data above. If either
+    // is "unavailable" (Octopus API was unreachable), the calculator
+    // disables itself rather than silently computing with a zero rate.
+    const ELEC_RATE_PENCE = parseFloat("{{ domestic.electricity_tariff }}");
+    const GAS_RATE_PENCE = parseFloat("{{ domestic.gas_tariff }}");
+    const STANDING_CHARGE_PENCE = parseFloat("{{ domestic.standing_charge }}");
+    const RATES_AVAILABLE = "{{ domestic.source }}" === "live";
+
+    function calculateBill() {
+        const resultBox = document.getElementById("bill-result");
+
+        if (!RATES_AVAILABLE || isNaN(ELEC_RATE_PENCE) || isNaN(GAS_RATE_PENCE)) {
+            resultBox.innerHTML = "Live rates are unavailable right now - try again shortly.";
+            return;
+        }
+
+        const elecUsage = parseFloat(document.getElementById("elec-usage").value) || 0;
+        const gasUsage = parseFloat(document.getElementById("gas-usage").value) || 0;
+        const standingCharge = isNaN(STANDING_CHARGE_PENCE) ? 0 : STANDING_CHARGE_PENCE;
+
+        const dailyPence = (elecUsage * ELEC_RATE_PENCE) + (gasUsage * GAS_RATE_PENCE) + standingCharge;
+        const monthlyPounds = (dailyPence * 30 / 100).toFixed(2);
+
+        resultBox.innerHTML =
+            `Estimated cost: <strong>£${(dailyPence / 100).toFixed(2)}/day</strong> · ` +
+            `<strong>£${monthlyPounds}/month</strong>`;
+    }
+
+    if (RATES_AVAILABLE) calculateBill();
+
+    fetch("/api/agile-rates")
+        .then(r => r.json())
+        .then(rates => {
+            if (!rates.length) {
+                document.getElementById("chart-agile-rates").innerHTML =
+                    '<p class="commentary-loading">Today\'s Agile rates aren\'t available right now.</p>';
+                return;
+            }
+
+            const prices = rates.map(r => r.price_pence);
+            const minPrice = Math.min(...prices);
+
+            Plotly.newPlot("chart-agile-rates", [{
+                x: rates.map(r => r.time),
+                y: prices,
+                type: "bar",
+                marker: {
+                    color: prices.map(p => p === minPrice ? "#00E5A8" : "#4EA3FF")
+                }
+            }], {
+                paper_bgcolor: "transparent",
+                plot_bgcolor: "transparent",
+                font: { color: "#94A3B8" },
+                margin: { t: 10, l: 50, r: 20, b: 40 },
+                xaxis: { gridcolor: "#263A5B", tickangle: -45 },
+                yaxis: { gridcolor: "#263A5B", title: "p/kWh" }
+            }, { responsive: true, displayModeBar: false });
+        })
+        .catch(() => {
+            document.getElementById("chart-agile-rates").innerHTML =
+                '<p class="commentary-loading">Today\'s Agile rates aren\'t available right now.</p>';
+        });
+</script>
+{% endblock %}

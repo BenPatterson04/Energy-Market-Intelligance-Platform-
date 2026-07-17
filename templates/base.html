@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+        GridWise
+        {% endblock %}
+    </title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Main CSS -->
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ========================= -->
+    <!-- Sidebar -->
+    <!-- ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <i class="fa-solid fa-bolt"></i>
+
+            <div>
+
+                <h2>GridWise</h2>
+
+                <span>Energy Intelligence</span>
+
+            </div>
+
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="/" {% if request.path == '/' %}class="active"{% endif %}>
+
+                <i class="fa-solid fa-house"></i>
+
+                Dashboard
+
+            </a>
+
+            <a href="/markets" {% if request.path == '/markets' %}class="active"{% endif %}>
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                Markets
+
+            </a>
+
+            <a href="/isem" {% if request.path == '/isem' %}class="active"{% endif %}>
+
+                <i class="fa-solid fa-plug-circle-bolt"></i>
+
+                i-SEM Market
+
+            </a>
+
+            <a href="/grid" {% if request.path == '/grid' %}class="active"{% endif %}>
+
+                <i class="fa-solid fa-bolt"></i>
+
+                Grid
+
+            </a>
+
+            <a href="/domestic" {% if request.path == '/domestic' %}class="active"{% endif %}>
+
+                <i class="fa-solid fa-house-chimney"></i>
+
+                Domestic
+
+            </a>
+                        <a href="/intelligence" {% if request.path == '/intelligence' %}class="active"{% endif %}>
+
+                <i class="fa-solid fa-newspaper"></i>
+
+                Intelligence
+
+            </a>
+
+            <a href="/forecasts" {% if request.path == '/forecasts' %}class="active"{% endif %}>
+
+                <i class="fa-solid fa-chart-area"></i>
+
+                Forecasts
+
+            </a>
+
+            <a href="/about" {% if request.path == '/about' %}class="active"{% endif %}>
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                About
+
+            </a>
+
+            {% if current_user.is_admin %}
+            <a href="/admin" {% if request.path == '/admin' %}class="active"{% endif %}>
+
+                <i class="fa-solid fa-user-shield"></i>
+
+                Admin
+
+            </a>
+            {% endif %}
+
+        </nav>
+
+    </aside>
+
+    <!-- ========================= -->
+    <!-- Main Content -->
+    <!-- ========================= -->
+
+    <main class="main-content">
+
+        <!-- Top Navigation -->
+
+        <header class="topbar">
+
+            <div class="page-title">
+
+                <h1>
+                    {% block page_title %}
+                    Dashboard
+                    {% endblock %}
+                </h1>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="text"
+                        id="quick-nav-search"
+                        placeholder="Jump to: markets, grid, domestic…"
+                        autocomplete="off">
+
+                </div>
+
+                <a href="/isem#alerts" class="icon-button" title="Alerts">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                </a>
+
+                <div class="account-menu">
+                    <span>{{ current_user.name }}</span>
+                    <span class="tier-badge {{ current_user.tier }}">{{ current_user.tier }}</span>
+                    {% if not current_user.is_premium %}
+                    <a href="/upgrade">Upgrade</a>
+                    {% endif %}
+                    <a href="/logout">Log Out</a>
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- Page Content -->
+
+        <section class="page-content">
+
+            {% block content %}
+            {% endblock %}
+
+        </section>
+
+    </main>
+
+</div>
+</body>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+    <script>
+        // Real quick-nav: matches typed text against actual page names and
+        // navigates there on Enter. Replaces what used to be a decorative,
+        // non-functional search box.
+        const QUICK_NAV_PAGES = {
+            "dashboard": "/", "home": "/",
+            "markets": "/markets",
+            "isem": "/isem", "i-sem": "/isem", "market": "/isem",
+            "grid": "/grid",
+            "domestic": "/domestic", "home energy": "/domestic", "bills": "/domestic",
+            "intelligence": "/intelligence", "news": "/intelligence", "briefing": "/intelligence",
+            "forecasts": "/forecasts", "forecast": "/forecasts",
+            "about": "/about",
+            "upgrade": "/upgrade", "premium": "/upgrade", "pricing": "/upgrade",
+            "admin": "/admin",
+        };
+
+        const quickNavInput = document.getElementById("quick-nav-search");
+
+        if (quickNavInput) {
+            quickNavInput.addEventListener("keydown", (e) => {
+                if (e.key !== "Enter") return;
+
+                const query = quickNavInput.value.trim().toLowerCase();
+                if (!query) return;
+
+                const exactMatch = QUICK_NAV_PAGES[query];
+                if (exactMatch) {
+                    window.location.href = exactMatch;
+                    return;
+                }
+
+                const partialKey = Object.keys(QUICK_NAV_PAGES).find(key => key.includes(query) || query.includes(key));
+                if (partialKey) {
+                    window.location.href = QUICK_NAV_PAGES[partialKey];
+                }
+            });
+        }
+    </script>
+
+    {% block scripts %}
+    {% endblock %}
+
+</body>
+</html>

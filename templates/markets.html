@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}
+GridWise | Markets
+{% endblock %}
+
+{% block page_title %}
+Markets
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <h2 class="section-title">Wholesale &amp; Financial Markets</h2>
+
+    <div class="market-grid">
+
+        <div class="market-card">
+            <span>🛢 Brent Crude</span>
+            <h3>${{ markets.brent.price }}</h3>
+            <span class="card-subtitle">{{ markets.brent.change_percent }}%</span>
+        </div>
+
+        <div class="market-card">
+            <span>🔥 Natural Gas</span>
+            <h3>${{ markets.natural_gas.price }}</h3>
+            <span class="card-subtitle">{{ markets.natural_gas.change_percent }}%</span>
+        </div>
+
+        <div class="market-card">
+            <span>📈 FTSE 100</span>
+            <h3>{{ markets.ftse100.price }}</h3>
+            <span class="card-subtitle">{{ markets.ftse100.change_percent }}%</span>
+        </div>
+
+        <div class="market-card">
+            <span>📊 S&amp;P 500</span>
+            <h3>{{ markets.sp500.price }}</h3>
+            <span class="card-subtitle">{{ markets.sp500.change_percent }}%</span>
+        </div>
+
+        <div class="market-card">
+            <span>🥇 Gold</span>
+            <h3>${{ markets.gold.price }}</h3>
+            <span class="card-subtitle">{{ markets.gold.change_percent }}%</span>
+        </div>
+
+        <div class="market-card">
+            <span>💷 GBP/USD</span>
+            <h3>{{ markets.gbpusd.price }}</h3>
+            <span class="card-subtitle">{{ markets.gbpusd.change_percent }}%</span>
+        </div>
+
+        <div class="market-card">
+            <span>⚡ UK Wholesale Electricity</span>
+            <h3 style="font-size:16px;">{{ markets.electricity.price }}</h3>
+        </div>
+
+    </div>
+
+    <h2 class="section-title">Price History</h2>
+
+    <div class="chart-card">
+
+        <div class="region-tabs" id="symbol-tabs">
+            <button class="region-tab active" data-symbol="BZ=F">Brent Crude</button>
+            <button class="region-tab" data-symbol="NG=F">Natural Gas</button>
+            <button class="region-tab" data-symbol="^FTSE">FTSE 100</button>
+            <button class="region-tab" data-symbol="^GSPC">S&amp;P 500</button>
+            <button class="region-tab" data-symbol="GC=F">Gold</button>
+        </div>
+
+        <div id="chart-market-history" style="width:100%;height:380px;"></div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.2/plotly.min.js"></script>
+<script src="{{ url_for('static', filename='js/markets.js') }}"></script>
+{% endblock %}

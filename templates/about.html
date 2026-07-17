@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}
+GridWise | About
+{% endblock %}
+
+{% block page_title %}
+About
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <div class="chart-card">
+        <h2 class="section-title" style="margin-top:0;">What is GridWise?</h2>
+        <p style="line-height:1.7;">
+            GridWise is an energy market intelligence platform bringing together wholesale market data,
+            i-SEM (Ireland/Northern Ireland electricity market) data, UK grid status, domestic energy
+            reference prices, weather, and curated energy news into one dashboard - with an AI-generated
+            daily briefing written for both general readers and energy professionals.
+        </p>
+    </div>
+
+    <div class="chart-card">
+        <h2 class="section-title" style="margin-top:0;">Data Sources</h2>
+        <ul style="line-height:2;padding-left:20px;">
+            <li>Wholesale markets (Brent, gas, indices, FX) — Yahoo Finance</li>
+            <li>UK grid carbon intensity &amp; generation mix — National Grid ESO Carbon Intensity API</li>
+            <li>i-SEM demand &amp; wind generation — ENTSO-E Transparency Platform</li>
+            <li>i-SEM carbon intensity &amp; wind share — Electricity Maps</li>
+            <li>UK &amp; global energy news — NewsAPI</li>
+            <li>Weather — OpenWeather</li>
+            <li>AI market commentary — Claude (Anthropic)</li>
+        </ul>
+        <p class="card-subtitle" style="margin-top:14px;">
+            Domestic tariffs are currently reference/example figures rather than a live per-supplier
+            feed - clearly labelled as such on the Domestic tab.
+        </p>
+    </div>
+
+    <div class="chart-card">
+        <h2 class="section-title" style="margin-top:0;">Version</h2>
+        <p>GridWise Version 4</p>
+    </div>
+
+</div>
+
+{% endblock %}

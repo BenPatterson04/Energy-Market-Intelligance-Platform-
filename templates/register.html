@@ -1,0 +1,58 @@
+{% extends "base_auth.html" %}
+
+{% block title %}GridWise | Sign Up{% endblock %}
+
+{% block content %}
+
+<div class="auth-card">
+
+    <h1>Create your account</h1>
+    <p class="card-subtitle">Free to start - upgrade any screen to Premium later.</p>
+
+    {% if error %}
+    <div class="alert-banner">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" class="auth-form">
+        <label>Full name</label>
+        <input type="text" name="name" required autofocus>
+
+        <label>Email</label>
+        <input type="email" name="email" required>
+
+        <label>Password</label>
+        <input type="password" name="password" required minlength="8">
+
+        <label>I am a...</label>
+        <div class="account-type-picker">
+
+            <label class="account-type-option">
+                <input type="radio" name="account_type" value="business" required>
+                <span>💼 Business / Professional</span>
+                <small>Trader-grade market data &amp; commentary</small>
+            </label>
+
+            <label class="account-type-option">
+                <input type="radio" name="account_type" value="student">
+                <span>🎓 Student</span>
+                <small>Plain-English explainers &amp; learning tools</small>
+            </label>
+
+            <label class="account-type-option">
+                <input type="radio" name="account_type" value="domestic">
+                <span>🏠 Household</span>
+                <small>Bills, tariffs &amp; home energy tracking</small>
+            </label>
+
+        </div>
+
+        <button type="submit">Create Account</button>
+    </form>
+
+    <p class="card-subtitle" style="margin-top:16px;">
+        Already have an account? <a href="/login">Log in</a>
+    </p>
+
+</div>
+
+{% endblock %}

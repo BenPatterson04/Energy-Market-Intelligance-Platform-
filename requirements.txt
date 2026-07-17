@@ -1,0 +1,9 @@
+Flask
+Flask-Login
+gunicorn
+requests
+yfinance
+feedparser
+python-dotenv
+anthropic
+stripe

@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}
+GridWise | i-SEM Market
+{% endblock %}
+
+{% block page_title %}
+i-SEM Market
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    {% if alert_log %}
+    <div class="alert-banner">
+        <strong>⚠ {{ alert_log|length }} recent alert(s) triggered.</strong>
+        Latest: {{ alert_log[0].message }}
+    </div>
+    {% endif %}
+
+    <!-- ================================= -->
+    <!-- Region tabs + live snapshot -->
+    <!-- ================================= -->
+
+    <div class="region-tabs" id="region-tabs">
+        <button class="region-tab active" data-region="ALL">All-Island</button>
+        <button class="region-tab" data-region="ROI">Republic of Ireland</button>
+        <button class="region-tab" data-region="NI">Northern Ireland</button>
+    </div>
+
+    <div class="market-grid">
+
+        <div class="market-card">
+            <span>⚡ System Demand</span>
+            <h3 id="snap-demand">{{ isem.demand_mw or '--' }} MW</h3>
+        </div>
+
+        <div class="market-card">
+            <span>🌬 Wind Share</span>
+            <h3 id="snap-wind">{{ isem.wind_percent or '--' }}%</h3>
+        </div>
+
+        <div class="market-card">
+            <span>🌍 Carbon Intensity</span>
+            <h3 id="snap-co2">{{ isem.co2_intensity or '--' }}</h3>
+        </div>
+
+        <div class="market-card">
+            <span>
+                Data source
+                <span class="data-source-badge {{ isem.source }}">{{ isem.source }}</span>
+            </span>
+            <h3 style="font-size:15px;">{{ isem.last_updated }}</h3>
+        </div>
+
+    </div>
+
+    <!-- ================================= -->
+    <!-- AI Market Commentary -->
+    <!-- ================================= -->
+
+    <h2 class="section-title">AI Market Commentary</h2>
+
+    <div class="chart-card">
+
+        <div class="commentary-tabs">
+            <button class="region-tab" data-audience="business">Business</button>
+            <button class="region-tab" data-audience="student">Student</button>
+            <button class="region-tab active" data-audience="domestic">Domestic</button>
+        </div>
+
+        <div id="commentary-box" class="commentary-box">
+            <p class="commentary-loading">Generating today's briefing…</p>
+        </div>
+
+    </div>
+
+    <!-- ================================= -->
+    <!-- Historical Plotly Charts -->
+    <!-- ================================= -->
+
+    <h2 class="section-title">Historical Analysis</h2>
+
+    <div class="chart-card">
+        <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-chart-line"></i> Demand vs Wind Generation</div>
+            <div class="card-subtitle">Last 24 hours</div>
+        </div>
+        <div id="chart-demand-wind" style="width:100%;height:360px;"></div>
+    </div>
+
+    <div class="chart-card">
+        <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-leaf"></i> Carbon Intensity</div>
+            <div class="card-subtitle">Last 24 hours</div>
+        </div>
+        <div id="chart-co2" style="width:100%;height:300px;"></div>
+    </div>
+
+    <!-- ================================= -->
+    <!-- Grid Map -->
+    <!-- ================================= -->
+
+    <h2 class="section-title">Grid Map</h2>
+
+    <div class="chart-card">
+        <div id="grid-map" style="width:100%;height:420px;"></div>
+        <div class="map-legend">
+            <span><i class="dot interconnector"></i> Interconnector</span>
+            <span><i class="dot demand"></i> Demand centre</span>
+        </div>
+    </div>
+
+    <!-- ================================= -->
+    <!-- Watchlist + Alerts -->
+    <!-- ================================= -->
+
+    <div class="content-grid">
+
+        <div class="chart-card">
+            <div class="card-header">
+                <div class="card-title"><i class="fa-solid fa-star"></i> Watchlist</div>
+            </div>
+
+            <div id="watchlist-items">
+                {% for item in watchlist %}
+                <div class="watchlist-row" data-key="{{ item.item_key }}">
+                    <span>{{ item.label }} <span class="card-subtitle">({{ item.category }})</span></span>
+                    <button onclick="removeWatchlistItem('{{ item.item_key }}')">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                {% else %}
+                <p class="commentary-loading">No items yet. Add i-SEM demand, wind, price, Brent or carbon intensity below.</p>
+                {% endfor %}
+            </div>
+
+            <div class="alert-form" style="grid-template-columns:2fr 1fr;">
+                <select id="watchlist-metric">
+                    <option value="isem_demand" data-label="i-SEM Demand" data-category="isem">i-SEM Demand</option>
+                    <option value="isem_wind_percent" data-label="i-SEM Wind Share" data-category="isem">i-SEM Wind Share</option>
+                    <option value="brent" data-label="Brent Crude" data-category="market">Brent Crude</option>
+                    <option value="carbon_intensity" data-label="Carbon Intensity" data-category="grid">Carbon Intensity</option>
+                </select>
+                <button onclick="addWatchlistItem()">Add</button>
+            </div>
+        </div>
+
+        <div class="chart-card" id="alerts">
+            <div class="card-header">
+                <div class="card-title"><i class="fa-solid fa-bell"></i> Alerts</div>
+            </div>
+
+            <div id="alert-items">
+                {% for alert in alerts %}
+                <div class="alert-row" data-id="{{ alert.id }}">
+                    <span>{{ alert.label }} {{ alert.condition }} {{ alert.threshold }}</span>
+                    <button onclick="removeAlert({{ alert.id }})">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                {% else %}
+                <p class="commentary-loading">No alerts set yet.</p>
+                {% endfor %}
+            </div>
+
+            <div class="alert-form">
+                <select id="alert-metric">
+                    <option value="isem_demand">i-SEM Demand (MW)</option>
+                    <option value="brent">Brent Crude ($)</option>
+                    <option value="carbon_intensity">Carbon Intensity</option>
+                </select>
+                <select id="alert-condition">
+                    <option value="above">Above</option>
+                    <option value="below">Below</option>
+                </select>
+                <input type="number" id="alert-threshold" placeholder="Threshold">
+                <button onclick="addAlert()">Set</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.2/plotly.min.js"></script>
+<script src="{{ url_for('static', filename='js/isem.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}GridWise | Dashboard{% endblock %}
+{% block page_title %}Business Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+
+    <h2 class="section-title">Market Snapshot</h2>
+
+    <div class="market-grid">
+        <div class="market-card">
+            <span>🛢 Brent Crude</span>
+            <h3>${{ markets.brent.price }}</h3>
+        </div>
+        <div class="market-card">
+            <span>🔥 Natural Gas</span>
+            <h3>${{ markets.natural_gas.price }}</h3>
+        </div>
+        <div class="market-card">
+            <span>⚡ i-SEM Demand</span>
+            <h3>{{ isem.demand_mw or '--' }} MW</h3>
+        </div>
+        <div class="market-card">
+            <span>🌍 Carbon Intensity</span>
+            <h3>{{ isem.co2_intensity or '--' }}</h3>
+        </div>
+    </div>
+
+    <h2 class="section-title">AI Market Commentary <span class="tier-badge {{ current_user.tier }}">{{ current_user.tier }}</span></h2>
+
+    <div class="chart-card">
+        <div id="commentary-box" class="commentary-box">
+            <p class="commentary-loading">Loading briefing…</p>
+        </div>
+    </div>
+
+    <h2 class="section-title">Relevant News</h2>
+
+    <div class="chart-card">
+        {% for article in news.uk[:4] %}
+        <div class="news-item">
+            <h4>{{ article.title }}</h4>
+            <span>{{ article.source }}</span>
+        </div>
+        {% else %}
+        <p class="commentary-loading">No headlines available right now.</p>
+        {% endfor %}
+    </div>
+
+    <h2 class="section-title">Historical Analysis &amp; Alerts</h2>
+
+    {% if current_user.is_premium %}
+        <div class="chart-card">
+            <div id="chart-demand-history" style="width:100%;height:340px;"></div>
+        </div>
+        <p class="card-subtitle">
+            Full watchlist and alert tools are on the <a href="/isem">i-SEM Market</a> tab.
+        </p>
+    {% else %}
+        <div class="premium-locked">
+            <i class="fa-solid fa-lock"></i>
+            <h3>Historical charts &amp; alerts are Premium</h3>
+            <p>Unlock 24h+ Plotly charts, custom price/demand alerts, and a saved watchlist.</p>
+            <a href="/upgrade" class="upgrade-btn">Upgrade to Premium</a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if current_user.is_premium %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.2/plotly.min.js"></script>
+<script>
+fetch("/api/isem-history?region=ALL&hours=24")
+    .then(r => r.json())
+    .then(data => {
+        Plotly.newPlot("chart-demand-history", [{
+            x: data.timestamps, y: data.demand_mw, type: "scatter", mode: "lines",
+            line: { color: "#00E5A8", width: 2 }
+        }], {
+            paper_bgcolor: "transparent", plot_bgcolor: "transparent",
+            font: { color: "#94A3B8" }, margin: { t: 20, l: 50, r: 20, b: 40 },
+            xaxis: { gridcolor: "#263A5B" }, yaxis: { gridcolor: "#263A5B" }
+        }, { responsive: true, displayModeBar: false });
+    });
+</script>
+{% endif %}
+<script>
+fetch("/api/commentary?audience=business")
+    .then(r => r.json())
+    .then(data => { document.getElementById("commentary-box").innerHTML = `<p>${data.commentary}</p>`; });
+</script>
+{% endblock %}

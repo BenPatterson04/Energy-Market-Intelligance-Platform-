@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}GridWise | Dashboard{% endblock %}
+{% block page_title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+
+    <h2 class="section-title">Today's Energy Story</h2>
+
+    <div class="chart-card">
+        <div id="commentary-box" class="commentary-box">
+            <p class="commentary-loading">Loading today's explainer…</p>
+        </div>
+    </div>
+
+    <h2 class="section-title">Quick Facts</h2>
+
+    <div class="market-grid">
+        <div class="market-card">
+            <span>🌬 Wind Share Right Now</span>
+            <h3>{{ isem.wind_percent or '--' }}%</h3>
+        </div>
+        <div class="market-card">
+            <span>🌍 Grid Carbon Intensity</span>
+            <h3>{{ isem.co2_intensity or '--' }}</h3>
+        </div>
+        <div class="market-card">
+            <span>🛢 Oil Price (why it matters for bills)</span>
+            <h3>${{ markets.brent.price }}</h3>
+        </div>
+    </div>
+
+    <h2 class="section-title">Relevant Reading</h2>
+
+    <div class="chart-card">
+        {% for article in news.global[:4] %}
+        <div class="news-item">
+            <h4>{{ article.title }}</h4>
+            <span>{{ article.source }}</span>
+        </div>
+        {% else %}
+        <p class="commentary-loading">No headlines available right now.</p>
+        {% endfor %}
+    </div>
+
+    <h2 class="section-title">Learn the Trend <span class="tier-badge {{ current_user.tier }}">{{ current_user.tier }}</span></h2>
+
+    {% if current_user.is_premium %}
+        <div class="chart-card">
+            <div id="chart-wind-history" style="width:100%;height:320px;"></div>
+            <p class="card-subtitle" style="margin-top:12px;">
+                Notice how wind generation rises and falls through the day - this is why grid
+                operators need backup gas plants even on a windy day.
+            </p>
+        </div>
+    {% else %}
+        <div class="premium-locked">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h3>Historical trend charts are Premium</h3>
+            <p>See how demand and wind generation actually move over time, with explanations
+               built for learning, not just trading.</p>
+            <a href="/upgrade" class="upgrade-btn">Upgrade to Premium</a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if current_user.is_premium %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.2/plotly.min.js"></script>
+<script>
+fetch("/api/isem-history?region=ALL&hours=24")
+    .then(r => r.json())
+    .then(data => {
+        Plotly.newPlot("chart-wind-history", [{
+            x: data.timestamps, y: data.wind_mw, type: "scatter", mode: "lines",
+            fill: "tozeroy", line: { color: "#4EA3FF", width: 2 }
+        }], {
+            paper_bgcolor: "transparent", plot_bgcolor: "transparent",
+            font: { color: "#94A3B8" }, margin: { t: 20, l: 50, r: 20, b: 40 },
+            xaxis: { gridcolor: "#263A5B" }, yaxis: { gridcolor: "#263A5B" }
+        }, { responsive: true, displayModeBar: false });
+    });
+</script>
+{% endif %}
+<script>
+fetch("/api/commentary?audience=student")
+    .then(r => r.json())
+    .then(data => { document.getElementById("commentary-box").innerHTML = `<p>${data.commentary}</p>`; });
+</script>
+{% endblock %}

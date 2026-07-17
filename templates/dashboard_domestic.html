@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}GridWise | Dashboard{% endblock %}
+{% block page_title %}Home Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+
+    <h2 class="section-title">Today's Household Briefing</h2>
+
+    <div class="chart-card">
+        <div id="commentary-box" class="commentary-box">
+            <p class="commentary-loading">Loading today's briefing…</p>
+        </div>
+    </div>
+
+    <h2 class="section-title">Right Now</h2>
+
+    <div class="market-grid">
+        <div class="market-card">
+            <span>🌤 Weather</span>
+            <h3>{{ weather.temperature }}°C</h3>
+        </div>
+        <div class="market-card">
+            <span>⚡ Electricity Rate</span>
+            <h3>{{ domestic.electricity_tariff }}</h3>
+        </div>
+        <div class="market-card">
+            <span>🔥 Gas Rate</span>
+            <h3>{{ domestic.gas_tariff }}</h3>
+        </div>
+        <div class="market-card">
+            <span>🌍 Grid Carbon Intensity</span>
+            <h3>{{ isem.co2_intensity or '--' }}</h3>
+        </div>
+    </div>
+
+    <h2 class="section-title">Relevant to Your Bills</h2>
+
+    <div class="chart-card">
+        {% for article in news.uk[:4] %}
+        <div class="news-item">
+            <h4>{{ article.title }}</h4>
+            <span>{{ article.source }}</span>
+        </div>
+        {% else %}
+        <p class="commentary-loading">No headlines available right now.</p>
+        {% endfor %}
+    </div>
+
+    <h2 class="section-title">Your Bill Estimate</h2>
+    <div class="chart-card">
+        <p class="card-subtitle">Use the full calculator on the <a href="/domestic">Domestic</a> tab.</p>
+    </div>
+
+    <h2 class="section-title">Price Alerts <span class="tier-badge {{ current_user.tier }}">{{ current_user.tier }}</span></h2>
+
+    {% if current_user.is_premium %}
+        <div class="chart-card">
+            <p class="card-subtitle">
+                Set up alerts on the <a href="/isem">i-SEM Market</a> tab to get notified when
+                wholesale prices drop - a good signal for when to run high-usage appliances.
+            </p>
+        </div>
+    {% else %}
+        <div class="premium-locked">
+            <i class="fa-solid fa-bell"></i>
+            <h3>Price alerts are Premium</h3>
+            <p>Get notified when wholesale energy prices are low - a good time to run the
+               washing machine, charge an EV, or heat water.</p>
+            <a href="/upgrade" class="upgrade-btn">Upgrade to Premium</a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+fetch("/api/commentary?audience=domestic")
+    .then(r => r.json())
+    .then(data => { document.getElementById("commentary-box").innerHTML = `<p>${data.commentary}</p>`; });
+</script>
+{% endblock %}

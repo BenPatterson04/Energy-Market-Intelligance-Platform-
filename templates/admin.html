@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}GridWise | Admin{% endblock %}
+{% block page_title %}Admin{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+
+    {% if not price_configured %}
+    <div class="alert-banner">
+        <strong>Stripe isn't configured yet</strong> - MRR below shows £0 because there's no real
+        price to calculate from, not because you have no paying members. Add your Stripe keys to
+        .env to see accurate figures.
+    </div>
+    {% endif %}
+
+    <h2 class="section-title">Membership Overview</h2>
+
+    <div class="market-grid">
+        <div class="market-card">
+            <span>Total Members</span>
+            <h3>{{ stats.total_members }}</h3>
+        </div>
+        <div class="market-card">
+            <span>Free</span>
+            <h3>{{ stats.free_count }}</h3>
+        </div>
+        <div class="market-card">
+            <span>Premium</span>
+            <h3>{{ stats.premium_count }}</h3>
+        </div>
+        <div class="market-card">
+            <span>Est. MRR</span>
+            <h3>£{{ stats.estimated_mrr_gbp }}</h3>
+        </div>
+    </div>
+
+    <div class="market-grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="market-card">
+            <span>💼 Business</span>
+            <h3>{{ stats.by_type.business }}</h3>
+        </div>
+        <div class="market-card">
+            <span>🎓 Student</span>
+            <h3>{{ stats.by_type.student }}</h3>
+        </div>
+        <div class="market-card">
+            <span>🏠 Domestic</span>
+            <h3>{{ stats.by_type.domestic }}</h3>
+        </div>
+    </div>
+
+    <h2 class="section-title">All Members</h2>
+
+    <div class="chart-card">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="text-align:left;border-bottom:1px solid var(--border);">
+                    <th style="padding:10px;color:var(--muted);font-size:13px;">Name</th>
+                    <th style="padding:10px;color:var(--muted);font-size:13px;">Email</th>
+                    <th style="padding:10px;color:var(--muted);font-size:13px;">Account Type</th>
+                    <th style="padding:10px;color:var(--muted);font-size:13px;">Tier</th>
+                    <th style="padding:10px;color:var(--muted);font-size:13px;">Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                <tr style="border-bottom:1px solid var(--border);">
+                    <td style="padding:10px;color:var(--text);">{{ member.name }}</td>
+                    <td style="padding:10px;color:var(--text);">{{ member.email }}</td>
+                    <td style="padding:10px;color:var(--text);text-transform:capitalize;">{{ member.account_type }}</td>
+                    <td style="padding:10px;"><span class="tier-badge {{ member.tier }}">{{ member.tier }}</span></td>
+                    <td style="padding:10px;color:var(--muted);">{{ member.created_at }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" style="padding:16px;color:var(--muted);">No members yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}
